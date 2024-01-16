@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
 
-from author import Author
+from app.models.author import Author
 
 
 class Message(BaseModel):

@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
 
-from enums.status import Status
+from app.models.enums.status import Status
 
 
 class Ticket(BaseModel):

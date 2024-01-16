@@ -1,13 +1,9 @@
-from app.repositories.ticket_repository import TicketRepository
 import uvicorn
-from fastapi import Depends, FastAPI
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 
+from app.routes.ticket_routes import router as ticket_router
 
 app = FastAPI()
-
-TICKET_FILEPATH = "../data/awesome_tickets.json"
-ticket_repository = TicketRepository(filepath=TICKET_FILEPATH)
 
 
 @app.get("/healthz")
@@ -15,13 +11,8 @@ async def root():
     return "OK"
 
 
-@app.get("/tickets")
-async def get_tickets(
-    limit: int = 20,
-    ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
-):
-    tickets = ticket_repository.get_tickets(limit)
-    return JSONResponse(tickets, status_code=200)
+# Routes
+app.include_router(ticket_router, prefix="/api/tickets")
 
 
 if __name__ == "__main__":
