@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from collections import Counter
 
 from app.models.ticket import Ticket
 from app.models.message import Message
@@ -20,6 +21,9 @@ class TicketRepository:
 
     def get_tickets(self, limit: Optional[int] = None) -> list[dict]:
         return self.data[:limit]
+
+    def get_ticket_counts(self) -> dict[Status, int]:
+        return Counter(ticket.status for ticket in self.data.values())
 
     def get_ticket(self, ticket_id: str) -> Ticket:
         if ticket_id not in self.data:

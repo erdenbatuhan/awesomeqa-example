@@ -17,6 +17,14 @@ async def get_tickets(
     return JSONResponse(jsonable_encoder(tickets), status_code=200)
 
 
+@router.get("/counts")
+async def get_ticket_counts(
+    repository: TicketRepository = Depends(lambda: ticket_repository)
+):
+    ticket_counts = repository.get_ticket_counts()
+    return JSONResponse(ticket_counts, status_code=200)
+
+
 @router.get("/{ticket_id}")
 async def get_ticket(
     ticket_id: str,
