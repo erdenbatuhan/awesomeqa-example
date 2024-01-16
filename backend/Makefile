@@ -1,15 +1,14 @@
-# Set the name of the virtual environment
-VENV_NAME = .venv
 PYTHON_VERSION = 3
+VENV_NAME = .venv
+VENV_ACTIVATE = . $(VENV_NAME)/bin/activate
 
 venv:
 	python$(PYTHON_VERSION) -m venv $(VENV_NAME)
 
 install:
-	. $(VENV_NAME)/bin/activate && pip install -r requirements.txt
+	$(VENV_ACTIVATE) && pip install -r requirements.txt
 
-setup: venv install	
-
+setup: venv install
 
 run:
-	python -m app.main
+	$(VENV_ACTIVATE) && python -m app.main
