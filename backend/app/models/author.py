@@ -1,9 +1,9 @@
-from pydantic import BaseModel
 from datetime import datetime
 
+from app.models.base_object import BaseObject
 
-class Author(BaseModel):
-    id: str
+
+class Author(BaseObject):
     name: str
     nickname: str
     color: str

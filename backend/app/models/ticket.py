@@ -1,12 +1,11 @@
-from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from typing import Optional
 
+from app.models.base_object import BaseObject
 from app.models.enums.status import Status
 
 
-class Ticket(BaseModel):
-    id: str
+class Ticket(BaseObject):
     msg_id: str
     status: Status
     resolved_by: Optional[str] = None

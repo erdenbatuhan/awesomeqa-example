@@ -1,12 +1,11 @@
-from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from typing import Optional
 
+from app.models.base_object import BaseObject
 from app.models.author import Author
 
 
-class Message(BaseModel):
-    id: str
+class Message(BaseObject):
     channel_id: str
     parent_channel_id: Optional[str] = None
     community_server_id: str
