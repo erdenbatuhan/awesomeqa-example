@@ -1,0 +1,31 @@
+.buttonCard {
+    border-radius: 8px;
+
+    .buttonActionArea {
+        width: 306px;
+        height: 130px;
+        padding: 0 16px;
+        border-radius: 8px;
+        border: 1px solid #302F36;
+        background: #1C1C1F;
+
+        .buttonIconWrapper {
+            width: 51px;
+            height: 50px;
+            border-radius: 8px;
+            background: rgba(93, 80, 195, 0.3);
+
+            .buttonIcon {
+                width: 38px;
+                height: 38px;
+                position: relative;
+                top: 6px;
+                left: 7px;
+            }
+        }
+
+        .buttonTextWrapper {
+            margin-top: 20px;
+        }
+    }
+}
