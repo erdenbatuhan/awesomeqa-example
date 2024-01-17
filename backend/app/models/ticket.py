@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import Optional
 
-from app.models.base_object import BaseObject
-from app.models.message import Message
-from app.models.enums.status import Status
+from .base_object import BaseObject
+from .message import Message
+from .enums.status import Status
 
 
 class Ticket(BaseObject):

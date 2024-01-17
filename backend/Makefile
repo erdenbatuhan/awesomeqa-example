@@ -12,3 +12,6 @@ setup: venv install
 
 run:
 	$(VENV_ACTIVATE) && python -m app.main
+
+test:
+	$(VENV_ACTIVATE) && python -m pytest

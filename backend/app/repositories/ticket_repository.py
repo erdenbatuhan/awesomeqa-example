@@ -1,14 +1,14 @@
 from datetime import datetime
 from collections import Counter
 
-from app.models.ticket import Ticket
-from app.models.message import Message
-from app.models.enums.status import Status
+from ..models.ticket import Ticket
+from ..models.message import Message
+from ..models.enums.status import Status
 
-from app.utils.data_utils import DataUtils
-from app.utils.list_utils import ListUtils
+from ..utils.data_utils import DataUtils
+from ..utils.list_utils import ListUtils
 
-from app.exceptions.not_found_exception import NotFoundException
+from ..exceptions.not_found_exception import NotFoundException
 
 
 class TicketRepository:

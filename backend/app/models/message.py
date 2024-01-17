@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-from app.models.base_object import BaseObject
-from app.models.author import Author
+from .base_object import BaseObject
+from .author import Author
 
 
 class Message(BaseObject):

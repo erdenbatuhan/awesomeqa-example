@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-from app.repositories.ticket_repository import TicketRepository
+from ..repositories.ticket_repository import TicketRepository
 
 router = APIRouter()
 ticket_repository = TicketRepository(filepath="../data/awesome_tickets.json")

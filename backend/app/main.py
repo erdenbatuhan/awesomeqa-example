@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.routes.ticket_routes import router as ticket_router
+from .routes.ticket_routes import router as ticket_router
 
 API_PREFIX = "/api/v1"
 

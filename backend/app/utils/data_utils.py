@@ -3,7 +3,7 @@ import json
 from typing import TypeVar, Union
 from pydantic import TypeAdapter
 
-from app.models.base_object import BaseObject
+from ..models.base_object import BaseObject
 
 
 class DataUtils:

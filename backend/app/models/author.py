@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.models.base_object import BaseObject
+from .base_object import BaseObject
 
 
 class Author(BaseObject):
