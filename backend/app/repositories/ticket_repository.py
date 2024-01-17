@@ -35,10 +35,7 @@ class TicketRepository:
         if ticket_id not in self.data:
             raise NotFoundException("ticket", ticket_id)
 
-        ticket = self.data[ticket_id]
-        ticket.msg = self.message_repository.get_message(ticket.msg_id)
-
-        return ticket
+        return self.data[ticket_id]
 
     def get_ticket_context_messages(self, ticket_id: str) -> list[Message]:
         ticket = self.get_ticket(ticket_id)
