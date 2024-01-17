@@ -18,7 +18,7 @@ class TicketRepository:
 
         # Set message attribute for each ticket
         for ticket_id, ticket in self.data["tickets"].items():
-            self.data["tickets"][ticket_id].msg = self.data["messages"][ticket.msg_id]
+            self.data["tickets"][ticket_id].msg = self.__get_message(ticket.msg_id)
 
     def get_tickets(self, page: int, page_size: int, **filter_arguments) -> list[dict]:
         tickets_filtered = [ticket for ticket in self.data["tickets"].values() if ticket.filter(**filter_arguments)]
