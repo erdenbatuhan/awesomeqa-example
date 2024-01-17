@@ -2,7 +2,6 @@ import uvicorn
 from fastapi import FastAPI
 
 from app.routes.ticket_routes import router as ticket_router
-from app.routes.message_routes import router as message_router
 
 API_PREFIX = "/api/v1"
 
@@ -16,7 +15,6 @@ async def root():
 
 # Routes
 app.include_router(ticket_router, prefix=f"{API_PREFIX}/tickets")
-app.include_router(message_router, prefix=f"{API_PREFIX}/messages")
 
 
 if __name__ == "__main__":
