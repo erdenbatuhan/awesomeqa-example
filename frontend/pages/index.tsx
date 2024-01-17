@@ -1,4 +1,7 @@
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid } from "@mui/material";
+import HomeOutlined from "@mui/icons-material/HomeOutlined";
+
+import ActionButton from "../components/common/actionButton";
 
 const IndexPage = () => {
   return (
@@ -7,14 +10,11 @@ const IndexPage = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: "50%", height: "4rem", fontSize: "1.2rem" }}
-                href="/home"
-              >
-                Home
-              </Button>
+              <ActionButton
+                title="Home"
+                iconElement={<HomeOutlined />}
+                nextRoute="/home"
+              />
             </Box>
           </Grid>
         </Grid>

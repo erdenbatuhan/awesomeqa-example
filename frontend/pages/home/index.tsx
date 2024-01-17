@@ -4,7 +4,7 @@ import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 
-import HomeButton from "../../components/home/homeButton";
+import ActionButton from "../../components/common/actionButton";
 
 const Home: NextPage = () => {
   return (
@@ -13,17 +13,17 @@ const Home: NextPage = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box sx={{ display: "flex", justifyContent: "center", gap: "1em" }}>
-              <HomeButton
+              <ActionButton
                 title="Knowledge Base"
                 iconElement={<LibraryBooksOutlinedIcon />}
               />
 
-              <HomeButton
+              <ActionButton
                 title="Tickets"
                 iconElement={<SupportAgentOutlinedIcon />}
               />
 
-              <HomeButton
+              <ActionButton
                 title="FAQ Insights"
                 iconElement={<LightbulbOutlinedIcon />}
               />
