@@ -4,7 +4,7 @@ import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 
-import HomeButton from "../../components/homeButton";
+import HomeButton from "../../components/home/homeButton";
 
 const Home: NextPage = () => {
   return (

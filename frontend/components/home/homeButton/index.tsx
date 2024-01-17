@@ -18,7 +18,7 @@ const HomeButton = ({ title, iconElement }: HomeButtonPropsType) => {
       <CardActionArea className={styles.buttonActionArea}>
         <Typography className={styles.buttonIconWrapper}>
           {cloneElement(iconElement, {
-            className: styles.buttonIcon
+            className: styles.buttonIcon,
           })}
         </Typography>
 

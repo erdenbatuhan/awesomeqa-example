@@ -1,8 +1,9 @@
-import "../styles/globals.css";
+import type { AppProps } from "next/app";
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import type { AppProps } from "next/app";
-import Layout from "../components/Layout";
+
+import Layout from "../components/main/layout";
+import "../styles/globals.css";
 
 const theme = createTheme({
   palette: {
@@ -14,6 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+
       <Layout>
         <Component {...pageProps} />
       </Layout>
