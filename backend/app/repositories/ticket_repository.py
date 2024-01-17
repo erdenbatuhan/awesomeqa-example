@@ -9,6 +9,7 @@ from app.models.enums.status import Status
 from app.repositories.message_repository import MessageRepository
 
 from app.utils.data_utils import DataUtils
+from app.utils.list_utils import ListUtils
 
 from app.exceptions.not_found_exception import NotFoundException
 
@@ -19,8 +20,13 @@ class TicketRepository:
         self.message_repository = MessageRepository(filepath)
         self.data = DataUtils.read_and_validate_data(filepath, Ticket, "tickets")
 
-    def get_tickets(self, limit: Optional[int] = None) -> list[dict]:
-        return self.data[:limit]
+        # Set message attribute for each ticket
+        for ticket_id, ticket in self.data.items():
+            self.data[ticket_id].msg = self.message_repository.get_message(ticket.msg_id)
+
+    def get_tickets(self, page: int, page_size: int, **filter_arguments) -> list[dict]:
+        tickets_filtered = [ticket for ticket in self.data.values() if ticket.filter(**filter_arguments)]
+        return ListUtils.get_paginated_list(lst=tickets_filtered, page=page, page_size=page_size)
 
     def get_ticket_counts(self) -> dict[Status, int]:
         return Counter(ticket.status for ticket in self.data.values())
@@ -29,7 +35,10 @@ class TicketRepository:
         if ticket_id not in self.data:
             raise NotFoundException("ticket", ticket_id)
 
-        return self.data[ticket_id]
+        ticket = self.data[ticket_id]
+        ticket.msg = self.message_repository.get_message(ticket.msg_id)
+
+        return ticket
 
     def get_ticket_context_messages(self, ticket_id: str) -> list[Message]:
         ticket = self.get_ticket(ticket_id)

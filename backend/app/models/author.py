@@ -4,6 +4,7 @@ from app.models.base_object import BaseObject
 
 
 class Author(BaseObject):
+
     name: str
     nickname: str
     color: str

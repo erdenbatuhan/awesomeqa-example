@@ -1,3 +1,5 @@
+from datetime import datetime
+from typing import Optional
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -10,10 +12,25 @@ ticket_repository = TicketRepository(filepath="../data/awesome_tickets.json")
 
 @router.get("/")
 async def get_tickets(
-    limit: int = 20,
+    page: int = 0,
+    page_size: int = 20,
+    author: Optional[str] = None,
+    msg_content: Optional[str] = None,
+    status: Optional[str] = None,
+    timestamp_start: Optional[datetime] = None,
+    timestamp_end: Optional[datetime] = None,
     repository: TicketRepository = Depends(lambda: ticket_repository)
 ):
-    tickets = repository.get_tickets(limit)
+    tickets = repository.get_tickets(
+        page,
+        page_size,
+        author=author,
+        msg_content=msg_content,
+        status=status,
+        timestamp_start=timestamp_start,
+        timestamp_end=timestamp_end
+    )
+
     return JSONResponse(jsonable_encoder(tickets), status_code=200)
 
 

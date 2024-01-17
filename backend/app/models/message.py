@@ -6,6 +6,7 @@ from app.models.author import Author
 
 
 class Message(BaseObject):
+
     channel_id: str
     parent_channel_id: Optional[str] = None
     community_server_id: str
