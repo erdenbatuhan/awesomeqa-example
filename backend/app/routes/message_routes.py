@@ -9,7 +9,7 @@ message_repository = MessageRepository(filepath="../data/awesome_tickets.json")
 
 
 @router.get("/{message_id}")
-async def get_tickets(
+async def get_messages(
     message_id: str,
     repository: MessageRepository = Depends(lambda: message_repository)
 ):
