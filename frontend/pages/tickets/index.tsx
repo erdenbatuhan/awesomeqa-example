@@ -6,7 +6,7 @@ import {
 import TicketFilter from "../../components/tickets/ticketFilter";
 import TicketTable from "../../components/tickets/ticketTable";
 
-const rows = []
+const data = []
 
 const Tickets: NextPage = () => {
   return (
@@ -24,7 +24,7 @@ const Tickets: NextPage = () => {
 
             <Box>
               <TicketTable
-                rows={rows}
+                data={data}
               />
             </Box>
           </Grid>

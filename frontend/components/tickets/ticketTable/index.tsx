@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Avatar, Box, Chip, IconButton, Paper, Tooltip, Typography,
   Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow,
@@ -8,18 +8,28 @@ import { MoreHoriz as InfoIcon, Delete as DeleteIcon } from "@mui/icons-material
 import TablePagination from "../../common/tablePagination";
 
 interface TicketTableProps {
-  rows: any[];
+  data: any[];
 }
 
-const TicketTable = ({ rows }: TicketTableProps) => {
+const STATUS_CHIP_COLOR = {
+  "open": "primary",
+  "closed": "success",
+  "removed": "error"
+};
+
+const TicketTable = ({ data }: TicketTableProps) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
+  const [rows, setRows] = useState([]);
 
-  const STATUS_CHIP_COLOR = {
-    "open": "primary",
-    "closed": "success",
-    "removed": "error"
-  };
+  useEffect(() => {
+    // Enhance the data readability (e.g., format dates for better readability)
+    setRows(data.map(item => ({
+      ...item,
+      "timestamp": formatDate(item["timestamp"]),
+      "ts_last_status_change": formatDate(item["ts_last_status_change"])
+    })));
+  }, [data]);
 
   const formatDate = (dateString: string) => dateString ? new Date(dateString).toLocaleString() : "-";
 
