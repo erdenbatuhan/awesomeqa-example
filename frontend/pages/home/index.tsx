@@ -21,6 +21,7 @@ const Home: NextPage = () => {
               <ActionButton
                 title="Tickets"
                 iconElement={<SupportAgentOutlinedIcon />}
+                nextRoute="/tickets"
               />
 
               <ActionButton

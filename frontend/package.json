@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.9.0",
-    "@emotion/styled": "^11.8.1",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@gelatonetwork/relay-sdk": "^5.0.0",
     "@mui/icons-material": "^5.14.3",
-    "@mui/material": "^5.8.0",
+    "@mui/material": "^5.15.5",
+    "@mui/x-date-pickers": "^6.19.0",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.10",
     "ethers": "^5.7.2",
     "keccak256": "^1.0.6",
     "next": "12.1.6",
