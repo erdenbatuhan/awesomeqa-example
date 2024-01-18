@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import Layout from "../components/main/layout";
+import Layout from "../components/layout";
 import "../styles/globals.css";
 
 const theme = createTheme({
