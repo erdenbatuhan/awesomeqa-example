@@ -26,7 +26,10 @@ const TicketStatusChip = ({ status, count }: TicketStatusChipPropsType) => {
       <Chip
         label={chipLabel}
         color={STATUS_CHIP_COLOR[status]}
-        className={styles.chip}
+        sx={{
+          "minWidth": "80px",
+          "textAlign": "center"
+        }}
       />
     </>
   );
