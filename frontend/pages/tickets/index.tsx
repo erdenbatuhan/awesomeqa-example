@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { NextPage } from "next";
 import {
   Box, Grid
@@ -6,9 +7,42 @@ import {
 import TicketFilter from "../../components/tickets/ticketFilter";
 import TicketTable from "../../components/tickets/ticketTable";
 
-const data = []
+import TicketService from "../../services/ticketService";
 
 const Tickets: NextPage = () => {
+  const [totalNumTickets, setTotalNumTickets] = useState(0);
+  const [tickets, setTickets] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+
+  useEffect(() => {
+    setTotalNumTickets(null);
+
+    TicketService.getTicketCounts()
+      .then((ticketCountsResponse) => {
+        setTotalNumTickets(
+          Object.values(ticketCountsResponse.data)
+            .reduce((totalCount, count) => totalCount + count, 0)
+        );
+      })
+      .catch((err) => {
+        console.error(`An error occurred while fetching the ticket counts. (Error: ${err.message})`);
+        setTotalNumTickets(0);
+      });
+  }, []);
+
+  useEffect(() => {
+    setTickets(null); // Set to null to visualize loading
+
+    TicketService.getTickets(page, pageSize)
+      .then((ticketsResponse) => setTickets(ticketsResponse.data))
+      .catch((err) => {
+        console.error(`An error occurred while fetching the tickets. (Error: ${err.message})`);
+        setTickets([]);
+      });
+  }, [page, pageSize]);
+
   return (
     <>
       <Box sx={{flexGrow: 1, mt: 5, mb: 5}}>
@@ -24,7 +58,14 @@ const Tickets: NextPage = () => {
 
             <Box>
               <TicketTable
-                data={data}
+                totalNumRows={totalNumTickets}
+                currentRows={tickets}
+                page={page}
+                pageSize={pageSize}
+                onPageChange={(page, pageSize) => {
+                  setPage(page);
+                  setPageSize(pageSize);
+                }}
               />
             </Box>
           </Grid>

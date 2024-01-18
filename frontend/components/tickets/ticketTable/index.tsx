@@ -1,117 +1,134 @@
 import { useState, useEffect } from "react";
 import {
-  Avatar, Box, Chip, IconButton, Paper, Tooltip, Typography,
+  Avatar, Box, Chip, IconButton, Paper, Tooltip, Typography, LinearProgress,
   Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow,
 } from "@mui/material";
-import { MoreHoriz as InfoIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import { MoreHoriz as InfoIcon, Check as CheckIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import TablePagination from "../../common/tablePagination";
 
 interface TicketTableProps {
-  data: any[];
+  totalNumRows: number;
+  currentRows: any[];
+  page: number;
+  pageSize: number;
+  onPageChange: (
+    page: number,
+    pageSize: number
+  ) => void;
 }
 
+const TABLE_COLUMNS = ["Status", "Author", "Message", "Creation", "Status Update", ""]
 const STATUS_CHIP_COLOR = {
   "open": "primary",
   "closed": "success",
   "removed": "error"
 };
 
-const TicketTable = ({ data }: TicketTableProps) => {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
-  const [rows, setRows] = useState([]);
+const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }: TicketTableProps) => {
+  const [tableRows, setTableRows] = useState([]);
 
   useEffect(() => {
-    // Enhance the data readability (e.g., format dates for better readability)
-    setRows(data.map(item => ({
+    // Enhance the rows readability (e.g., format dates for better readability)
+    setTableRows(currentRows && currentRows.map(item => ({
       ...item,
       "timestamp": formatDate(item["timestamp"]),
-      "ts_last_status_change": formatDate(item["ts_last_status_change"])
+      "ts_last_status_change": item["ts_last_status_change"]
+        ? formatDate(item["ts_last_status_change"])
+        : formatDate(item["timestamp"])
     })));
-  }, [data]);
+  }, [currentRows]);
 
-  const formatDate = (dateString: string) => dateString ? new Date(dateString).toLocaleString() : "-";
-
-  // Avoid a layout jump when reaching the last page with empty rows
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - rows.length) : 0;
+  const formatDate = (dateString: string) => new Date(dateString).toLocaleString();
 
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }}>
+        <Table sx={{ minWidth: 500 }} stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Status</TableCell>
-              <TableCell>Author</TableCell>
-              <TableCell>Message</TableCell>
-              <TableCell>Creation Date</TableCell>
-              <TableCell>Update Date</TableCell>
-              <TableCell>Action Buttons</TableCell>
+              {TABLE_COLUMNS.map((column) => (
+                <TableCell key={column}>{column}</TableCell>
+              ))}
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {(pageSize > 0
-                ? rows.slice(page * pageSize, page * pageSize + pageSize)
-                : rows
-            ).map((row) => (
-              <TableRow key={row["id"]}>
-                <TableCell component="th" scope="row">
-                  <Chip
-                    label={row["status"]}
-                    color={STATUS_CHIP_COLOR[row["status"]]}
-                    sx={{
-                      "minWidth": "80px",
-                      "textAlign": "center",
-                    }}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                    <Avatar
-                      src={row["msg"]["author"]["avatar_url"]}
+            {tableRows ? (
+              tableRows.map((row) => (
+                <TableRow key={row["id"]}>
+                  <TableCell component="th" scope="row">
+                    <Chip
+                      label={row["status"]}
+                      color={STATUS_CHIP_COLOR[row["status"]]}
+                      sx={{
+                        "minWidth": "80px",
+                        "textAlign": "center",
+                      }}
                     />
+                  </TableCell>
 
-                    <Typography variant="caption">
-                      {row["msg"]["author"]["name"]}
+                  <TableCell>
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                      <Avatar
+                        src={row["msg"]["author"]["avatar_url"]}
+                        sx={{
+                          border: `2px solid ${row["msg"]["author"]["color"]}`,
+                          borderRadius: "50%",
+                        }}
+                      />
+
+                      <Typography variant="caption">
+                        {row["msg"]["author"]["name"]}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+
+                  <TableCell sx={{ width: 400 }}>
+                    {row["msg"]["content"]}
+                  </TableCell>
+
+                  <TableCell sx={{ width: 150 }}>
+                    {row["timestamp"]}
+                  </TableCell>
+
+                  <TableCell sx={{ width: 150 }}>
+                    {row["ts_last_status_change"]}
+                  </TableCell>
+
+                  <TableCell>
+                    <Tooltip title="See Ticket Details" arrow>
+                      <IconButton color="info">
+                        <InfoIcon />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Close Ticket" arrow>
+                      <IconButton color="success">
+                        <CheckIcon />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Delete Ticket" arrow>
+                      <IconButton color="warning">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <>
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    <Typography variant="overline" color="textSecondary" gutterBottom>
+                      Loading ...
                     </Typography>
-                  </Box>
-                </TableCell>
 
-                <TableCell>
-                  {row["msg"]["content"]}
-                </TableCell>
-
-                <TableCell>
-                  {row["timestamp"]}
-                </TableCell>
-
-                <TableCell>
-                  {row["ts_last_status_change"]}
-                </TableCell>
-
-                <TableCell>
-                  <Tooltip title="See Ticket Details" arrow>
-                    <IconButton aria-label="edit" color="info">
-                      <InfoIcon />
-                    </IconButton>
-                  </Tooltip>
-
-                  <Tooltip title="Delete Ticket" arrow>
-                    <IconButton aria-label="edit" color="warning">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
+                    <LinearProgress />
+                  </TableCell>
+                </TableRow>
+              </>
             )}
           </TableBody>
 
@@ -119,13 +136,10 @@ const TicketTable = ({ data }: TicketTableProps) => {
             <TableRow>
               <TablePagination
                 colSpan={6}
-                count={rows.length}
+                count={totalNumRows}
                 page={page}
                 pageSize={pageSize}
-                onChange={(page, pageSize) => {
-                  setPage(page);
-                  setPageSize(pageSize);
-                }}
+                onChange={onPageChange}
               />
             </TableRow>
           </TableFooter>

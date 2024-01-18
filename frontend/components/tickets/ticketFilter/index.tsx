@@ -10,7 +10,7 @@ type TicketFilterPropsType = {
   onApply: (filter: Object) => void;
 }
 
-const STATUS_VALUES = ["open", "closed", "removed"];
+const STATUS_VALUES = ["open", "closed", /* "removed" */];
 const EMPTY_FILTER = {
   status: "",
   author: "",

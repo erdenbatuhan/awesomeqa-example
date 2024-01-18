@@ -1,11 +1,19 @@
 import uvicorn
 from fastapi import FastAPI, status as http_status
+from fastapi.middleware.cors import CORSMiddleware
 
 from .routes.ticket_routes import router as ticket_router
 
 API_PREFIX = "/api/v1"
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get(
