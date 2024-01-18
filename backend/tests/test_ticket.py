@@ -1,5 +1,6 @@
 from datetime import datetime
 from collections import Counter
+from fastapi import status as http_status
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -31,7 +32,7 @@ def test_get_tickets():
     response = client.get("/api/v1/tickets/")
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == DEFAULT_PAGE_SIZE
     assert response_data[0]["id"] == first_expected_ticket.id
 
@@ -48,7 +49,7 @@ def test_get_tickets_with_pagination():
     response = client.get("/api/v1/tickets/", params={"page": page, "page_size": page_size})
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == page_size
     assert response_data[0]["id"] == first_expected_ticket.id
 
@@ -61,7 +62,7 @@ def test_get_tickets_with_invalid_pagination():
     response = client.get("/api/v1/tickets/", params={"page": -5, "page_size": -10})
     response_data = response.json()
 
-    assert response.status_code == 422
+    assert response.status_code == http_status.HTTP_422_UNPROCESSABLE_ENTITY
     assert len(response_data["detail"]) == 2
     assert sum([item["msg"] == "Input should be greater than or equal to 0" for item in response_data["detail"]]) == 2
     assert [item["loc"][1] for item in response_data["detail"]] == ["page", "page_size"]
@@ -84,7 +85,7 @@ def test_get_tickets_with_author_filter():
     })
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == num_tickets_with_given_author
     assert all([item["msg"]["author"]["name"] == author_name for item in response_data])
 
@@ -106,7 +107,7 @@ def test_get_tickets_with_msg_content_filter():
     })
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == num_messages_with_given_content
     assert all([message_content.lower() in item["msg"]["content"].lower() for item in response_data])
 
@@ -128,7 +129,7 @@ def test_get_tickets_with_status_filter():
     })
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == num_tickets_with_given_status
     assert all([item["status"] == status for item in response_data])
 
@@ -151,7 +152,7 @@ def test_get_tickets_with_timestamp_filter():
     })
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == num_tickets_with_timestamps_within_given_range
     assert all([
         timestamp_start <= datetime.fromisoformat(item["timestamp"]) <= timestamp_end
@@ -169,7 +170,7 @@ def test_get_ticket_counts():
     response = client.get("/api/v1/tickets/counts")
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert isinstance(response_data, dict)
     assert response_data == dict(ticket_counts)
 
@@ -184,7 +185,7 @@ def test_get_ticket():
     response = client.get(f"/api/v1/tickets/{ticket_id}")
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert isinstance(response_data, dict)
     assert response_data["id"] == ticket_id
 
@@ -200,7 +201,7 @@ def test_get_ticket_not_found():
     response = client.get(f"/api/v1/tickets/{ticket_id}")
     response_data = response.json()
 
-    assert response.status_code == 404
+    assert response.status_code == http_status.HTTP_404_NOT_FOUND
     assert response_data["detail"] == ticket_not_found_exception.detail
 
 
@@ -214,7 +215,7 @@ def test_get_ticket_context_messages():
     response = client.get(f"/api/v1/tickets/{ticket.id}/messages")
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert len(response_data) == len(ticket.context_messages)
     assert [message["id"] for message in response_data] == ticket.context_messages
 
@@ -229,7 +230,7 @@ def test_close_ticket():
     response = client.put(f"/api/v1/tickets/{ticket_id}")
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert response_data["id"] == ticket_id
     assert response_data["status"] == Status.CLOSED
 
@@ -244,6 +245,6 @@ def test_remove_ticket():
     response = client.delete(f"/api/v1/tickets/{ticket_id}")
     response_data = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == http_status.HTTP_200_OK
     assert response_data["id"] == ticket_id
     assert response_data["status"] == Status.REMOVED
