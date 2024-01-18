@@ -99,27 +99,39 @@ const TicketTable = ({
 
                   <TableCell>
                     <Tooltip title="See Ticket Details" arrow>
-                      <IconButton color="info">
-                        <InfoIcon />
-                      </IconButton>
+                      <span>
+                        <IconButton color="info">
+                          <InfoIcon/>
+                        </IconButton>
+                      </span>
                     </Tooltip>
 
                     <Tooltip title="Close Ticket" arrow>
-                      <IconButton
-                        color="success"
-                        disabled={row["status"] !== "open"}
-                        sx={{
-                          opacity: row["status"] === "open" ? 1 : 0.3
-                        }}
-                      >
-                        <CheckIcon onClick={(): void => { onTicketClose(idx, row) }} />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          color="success"
+                          disabled={row["status"] !== "open"}
+                          sx={{
+                            opacity: row["status"] === "open" ? 1 : 0.3
+                          }}
+                          onClick={(): void => { onTicketClose(idx, row) }}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                      </span>
                     </Tooltip>
 
                     <Tooltip title="Delete Ticket" arrow>
-                      <IconButton color="warning">
-                        <DeleteIcon onClick={(): void => { onTicketRemove(idx, row) }} />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          color="warning"
+                          onClick={(): void => {
+                            onTicketRemove(idx, row)
+                          }}
+                        >
+                          <DeleteIcon/>
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   </TableCell>
                 </TableRow>

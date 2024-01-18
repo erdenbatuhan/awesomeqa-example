@@ -20,7 +20,7 @@ const TablePagination = ({ colSpan, count, page, pageSize, onChange }: TablePagi
   const [rowsPerPageOptions, setRowsPerPageOptions] = useState([])
 
   useEffect(() => {
-    setRowsPerPageOptions([...ROWS_PER_PAGE_OPTIONS, ...[{ label: "All", value: count }]])
+    setRowsPerPageOptions([...ROWS_PER_PAGE_OPTIONS, ...[{label: "All", value: count || 0}]]);
   }, [count]);
 
   const handleChangePage = (
@@ -41,7 +41,7 @@ const TablePagination = ({ colSpan, count, page, pageSize, onChange }: TablePagi
       <MuiTablePagination
         rowsPerPageOptions={rowsPerPageOptions}
         colSpan={colSpan}
-        count={count}
+        count={count || 0}
         page={page}
         rowsPerPage={pageSize}
         onPageChange={handleChangePage}
