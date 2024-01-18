@@ -8,7 +8,6 @@ from ..repositories.ticket_repository import TicketRepository
 from ..models.ticket import Ticket
 from ..models.message import Message
 from ..models.enums.status import Status
-from ..exceptions.not_found_exception import NotFoundException
 
 DEFAULT_PAGE = 0
 DEFAULT_PAGE_SIZE = 20
