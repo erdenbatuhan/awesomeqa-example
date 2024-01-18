@@ -1,5 +1,6 @@
 from datetime import datetime
 from collections import Counter
+from typing import Union
 
 from ..models.ticket import Ticket
 from ..models.message import Message
@@ -18,9 +19,13 @@ class TicketRepository:
         for ticket_id, ticket in self.data["tickets"].items():
             self.data["tickets"][ticket_id].msg = self.__get_message(ticket.msg_id)
 
-    def get_tickets(self, page: int, page_size: int, **filter_arguments) -> list[dict]:
+    def get_tickets(self, page: int, page_size: int, **filter_arguments) -> dict[str, Union[int, list[Ticket]]]:
         tickets_filtered = [ticket for ticket in self.data["tickets"].values() if ticket.filter(**filter_arguments)]
-        return ListUtils.get_paginated_list(lst=tickets_filtered, page=page, page_size=page_size)
+
+        return {
+            "ticket_count": len(tickets_filtered),
+            "tickets": ListUtils.get_paginated_list(lst=tickets_filtered, page=page, page_size=page_size)
+        }
 
     def get_ticket_counts(self) -> dict[Status, int]:
         return Counter(ticket.status for ticket in self.data["tickets"].values())

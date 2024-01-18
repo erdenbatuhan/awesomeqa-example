@@ -21,37 +21,22 @@ mock_data = DataUtils.read_and_validate_data(
 mock_ticket_message_ids = [ticket.msg_id for ticket in mock_data["tickets"].values()]
 
 
-def test_get_tickets():
-    """
-    Confirm that the default page size is correct and the response starts at the default page
-    """
-
-    first_expected_idx = DEFAULT_PAGE * DEFAULT_PAGE_SIZE
-    first_expected_ticket = list(mock_data["tickets"].values())[first_expected_idx]
-
-    response = client.get("/api/v1/tickets/")
-    response_data = response.json()
-
-    assert response.status_code == http_status.HTTP_200_OK
-    assert len(response_data) == DEFAULT_PAGE_SIZE
-    assert response_data[0]["id"] == first_expected_ticket.id
-
-
 def test_get_tickets_with_pagination():
     """
     Confirm that the response data matches the expected page size and starts at the given page
     """
 
-    page, page_size = 12, 8
-    first_expected_idx = page * page_size
-    first_expected_ticket = list(mock_data["tickets"].values())[first_expected_idx]
+    for page, page_size in [(DEFAULT_PAGE, DEFAULT_PAGE_SIZE), (12, 8)]:
+        first_expected_idx = page * page_size
+        first_expected_ticket = list(mock_data["tickets"].values())[first_expected_idx]
 
-    response = client.get("/api/v1/tickets/", params={"page": page, "page_size": page_size})
-    response_data = response.json()
+        response = client.get("/api/v1/tickets/", params={"page": page, "page_size": page_size})
+        response_data = response.json()
 
-    assert response.status_code == http_status.HTTP_200_OK
-    assert len(response_data) == page_size
-    assert response_data[0]["id"] == first_expected_ticket.id
+        assert response.status_code == http_status.HTTP_200_OK
+        assert response_data["ticket_count"] == len(mock_data["tickets"].keys())
+        assert len(response_data["tickets"]) == page_size
+        assert response_data["tickets"][0]["id"] == first_expected_ticket.id
 
 
 def test_get_tickets_with_invalid_pagination():
@@ -86,8 +71,9 @@ def test_get_tickets_with_author_filter():
     response_data = response.json()
 
     assert response.status_code == http_status.HTTP_200_OK
-    assert len(response_data) == num_tickets_with_given_author
-    assert all([item["msg"]["author"]["name"] == author_name for item in response_data])
+    assert response_data["ticket_count"] == num_tickets_with_given_author
+    assert len(response_data["tickets"]) == num_tickets_with_given_author
+    assert all([item["msg"]["author"]["name"] == author_name for item in response_data["tickets"]])
 
 
 def test_get_tickets_with_msg_content_filter():
@@ -108,8 +94,9 @@ def test_get_tickets_with_msg_content_filter():
     response_data = response.json()
 
     assert response.status_code == http_status.HTTP_200_OK
-    assert len(response_data) == num_messages_with_given_content
-    assert all([message_content.lower() in item["msg"]["content"].lower() for item in response_data])
+    assert response_data["ticket_count"] == num_messages_with_given_content
+    assert len(response_data["tickets"]) == num_messages_with_given_content
+    assert all([message_content.lower() in item["msg"]["content"].lower() for item in response_data["tickets"]])
 
 
 def test_get_tickets_with_status_filter():
@@ -130,8 +117,9 @@ def test_get_tickets_with_status_filter():
     response_data = response.json()
 
     assert response.status_code == http_status.HTTP_200_OK
-    assert len(response_data) == num_tickets_with_given_status
-    assert all([item["status"] == status for item in response_data])
+    assert response_data["ticket_count"] == num_tickets_with_given_status
+    assert len(response_data["tickets"]) == num_tickets_with_given_status
+    assert all([item["status"] == status for item in response_data["tickets"]])
 
 
 def test_get_tickets_with_timestamp_filter():
@@ -153,10 +141,11 @@ def test_get_tickets_with_timestamp_filter():
     response_data = response.json()
 
     assert response.status_code == http_status.HTTP_200_OK
-    assert len(response_data) == num_tickets_with_timestamps_within_given_range
+    assert response_data["ticket_count"] == num_tickets_with_timestamps_within_given_range
+    assert len(response_data["tickets"]) == num_tickets_with_timestamps_within_given_range
     assert all([
         timestamp_start <= datetime.fromisoformat(item["timestamp"]) <= timestamp_end
-        for item in response_data
+        for item in response_data["tickets"]
     ])
 
 

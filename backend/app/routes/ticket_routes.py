@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 from fastapi import APIRouter, Query, Depends, status as http_status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -18,10 +18,10 @@ ticket_repository = TicketRepository(filepath="../data/awesome_tickets.json")
 
 @router.get(
     "/",
-    summary="Get paginated response of tickets with optional filters.",
+    summary="Get paginated list of tickets with optional filters, including the total ticket count.",
     tags=["Tickets"],
-    response_model=list[Ticket],
-    response_description="A paginated list of tickets after applying optional filters.",
+    response_model=dict[str, Union[int, list[Ticket]]],
+    response_description="A paginated list of filtered tickets with the total ticket count.",
     responses={
         http_status.HTTP_200_OK: {"description": "Tickets successfully retrieved."},
         http_status.HTTP_422_UNPROCESSABLE_ENTITY: {"description": "Validation error in request."},
