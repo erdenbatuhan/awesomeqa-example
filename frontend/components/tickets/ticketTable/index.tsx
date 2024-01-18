@@ -8,7 +8,7 @@ import { MoreHoriz as InfoIcon, Check as CheckIcon, Delete as DeleteIcon } from 
 import TicketStatusChip from "../ticketStatusChip";
 import TablePagination from "../../common/tablePagination";
 
-import type Ticket from "../../../services/types/ticket.type";
+import type Ticket from "../../../types/ticket.type";
 
 interface TicketTableProps {
   totalNumRows: number;

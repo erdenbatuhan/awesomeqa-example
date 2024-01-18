@@ -1,8 +1,8 @@
 import axios, {AxiosResponse} from 'axios';
 
 import Constants from "./constants";
-import type Ticket from "./types/ticket.type";
-import type Message from "./types/message.type";
+import type Ticket from "../types/ticket.type";
+import type Message from "../types/message.type";
 
 interface TicketsResponse {
   ticket_count: number;

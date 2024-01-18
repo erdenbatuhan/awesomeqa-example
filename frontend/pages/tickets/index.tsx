@@ -9,9 +9,10 @@ import TicketFilter from "../../components/tickets/ticketFilter";
 import type { Filter } from "../../components/tickets/ticketFilter";
 import TicketTable from "../../components/tickets/ticketTable";
 import ConfirmationDialog from "../../components/common/confirmationDialog";
+import MessageCard from "../../components/tickets/messageCard";
 
 import TicketService from "../../services/ticketService";
-import type Ticket from "../../services/types/ticket.type";
+import type Ticket from "../../types/ticket.type";
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 5;
@@ -170,6 +171,9 @@ const Tickets: NextPage = () => {
         dialogShown={confirmationDialogShown}
         action={lastSelectedAction}
         itemName="ticket"
+        dialogContent={(
+          <MessageCard message={lastSelectedTicket && lastSelectedTicket.msg} />
+        )}
         onConfirm={takeAction}
         onClose={() => setConfirmationDialogShown(false)}
       />
