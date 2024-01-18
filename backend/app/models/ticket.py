@@ -25,7 +25,7 @@ class Ticket(BaseObject):
                 self.msg is not None and kwargs.get('msg_content').lower() in self.msg.content.lower()
             ),
             kwargs.get('status') is None or (
-                kwargs.get('status') == self.status
+                self.status in kwargs.get('status')
             ),
             kwargs.get('timestamp_start') is None or kwargs.get('timestamp_start') <= self.timestamp,
             kwargs.get('timestamp_end') is None or self.timestamp <= kwargs.get('timestamp_end')

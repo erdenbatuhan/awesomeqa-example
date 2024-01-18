@@ -33,7 +33,7 @@ async def get_tickets(
     page_size: int = Query(default=DEFAULT_PAGE_SIZE, ge=0),
     author: Optional[str] = None,
     msg_content: Optional[str] = None,
-    status: Optional[str] = None,
+    status: Optional[list[Status]] = Query(None),
     timestamp_start: Optional[datetime] = None,
     timestamp_end: Optional[datetime] = None,
     repository: TicketRepository = Depends(lambda: ticket_repository)
