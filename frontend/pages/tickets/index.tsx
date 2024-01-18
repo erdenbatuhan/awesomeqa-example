@@ -8,8 +8,10 @@ import TicketStatusChip from "../../components/tickets/ticketStatusChip";
 import TicketFilter from "../../components/tickets/ticketFilter";
 import type { Filter } from "../../components/tickets/ticketFilter";
 import TicketTable from "../../components/tickets/ticketTable";
+import ConfirmationDialog from "../../components/common/confirmationDialog";
 
 import TicketService from "../../services/ticketService";
+import type Ticket from "../../services/types/ticket.type";
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 5;
@@ -22,6 +24,10 @@ const Tickets: NextPage = () => {
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [filterApplied, setFilterApplied] = useState({});
+
+  const [lastSelectedTicket, setLastSelectedTicket] = useState(null);
+  const [lastSelectedAction, setLastSelectedAction] = useState(null);
+  const [confirmationDialogShown, setConfirmationDialogShown] = useState(false);
 
   useEffect(() => {
     setTotalNumTickets(null);
@@ -36,7 +42,7 @@ const Tickets: NextPage = () => {
       });
   }, []);
 
-  useEffect(() => {
+  const fetchTickets = () => {
     setTickets(null); // Set to null to visualize loading
 
     TicketService.getTickets(page, pageSize, {
@@ -54,6 +60,10 @@ const Tickets: NextPage = () => {
         console.error(`An error occurred while fetching the tickets. (Error: ${err.message})`);
         setTickets([]);
       });
+  }
+
+  useEffect(() => {
+    fetchTickets();
   }, [filterApplied, page, pageSize]);
 
   const toLocalISOString = (date: Date, end_of_day: boolean = false): string => {
@@ -70,6 +80,49 @@ const Tickets: NextPage = () => {
     // Reset the page variables
     setPage(DEFAULT_PAGE);
     setPageSize(DEFAULT_PAGE_SIZE);
+  }
+
+  const setStatusCountsAfterUpdate = (oldStatus: string, newStatus: string): void => {
+    statusTicketCounts[oldStatus] -= 1;
+    statusTicketCounts[newStatus] += 1;
+
+    setStatusTicketCounts(statusTicketCounts);
+  }
+
+  const closeTicket = (ticket: Ticket): void => {
+    TicketService.closeTicket(ticket.id)
+      .then(() => {
+        // Fetch all tickets after closing the ticket
+        fetchTickets();
+
+        // Update status ticket counts
+        setStatusCountsAfterUpdate(ticket.status, "closed");
+      })
+      .catch((err) => {
+        console.error(`An error occurred while closing the ticket. (Error: ${err.message})`);
+      });
+  }
+
+  const removeTicket = (ticket: Ticket): void => {
+    TicketService.removeTicket(ticket.id)
+      .then(() => {
+        // Fetch all tickets after removing the ticket
+        fetchTickets();
+
+        // Update status ticket counts
+        setStatusCountsAfterUpdate(ticket.status, "removed");
+      })
+      .catch((err) => {
+        console.error(`An error occurred while removing the ticket. (Error: ${err.message})`);
+      });
+  }
+
+  const takeAction = (): void => {
+    if (lastSelectedAction === "CLOSE") {
+      closeTicket(lastSelectedTicket);
+    } else {
+      removeTicket(lastSelectedTicket);
+    }
   }
 
   return (
@@ -97,11 +150,29 @@ const Tickets: NextPage = () => {
                   setPage(page);
                   setPageSize(pageSize);
                 }}
+                onTicketClose={(ticketIdx: number, ticket: Ticket): void => {
+                  setLastSelectedTicket(ticket);
+                  setLastSelectedAction("CLOSE");
+                  setConfirmationDialogShown(true);
+                }}
+                onTicketRemove={(ticketIdx: number, ticket: Ticket): void => {
+                  setLastSelectedTicket(ticket);
+                  setLastSelectedAction("DELETE");
+                  setConfirmationDialogShown(true);
+                }}
               />
             </Box>
           </Grid>
         </Grid>
       </Box>
+
+      <ConfirmationDialog
+        dialogShown={confirmationDialogShown}
+        action={lastSelectedAction}
+        itemName="ticket"
+        onConfirm={takeAction}
+        onClose={() => setConfirmationDialogShown(false)}
+      />
     </>
   );
 };

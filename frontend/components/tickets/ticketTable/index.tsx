@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Avatar, Box, Chip, IconButton, Paper, Tooltip, Typography, LinearProgress,
+  Avatar, Box, IconButton, Paper, Tooltip, Typography, LinearProgress,
   Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow,
 } from "@mui/material";
 import { MoreHoriz as InfoIcon, Check as CheckIcon, Delete as DeleteIcon } from "@mui/icons-material";
@@ -8,20 +8,32 @@ import { MoreHoriz as InfoIcon, Check as CheckIcon, Delete as DeleteIcon } from 
 import TicketStatusChip from "../ticketStatusChip";
 import TablePagination from "../../common/tablePagination";
 
+import type Ticket from "../../../services/types/ticket.type";
+
 interface TicketTableProps {
   totalNumRows: number;
-  currentRows: any[];
+  currentRows: Ticket[];
   page: number;
   pageSize: number;
   onPageChange: (
     page: number,
     pageSize: number
   ) => void;
+  onTicketClose: (
+    ticketIdx: number,
+    ticket: Ticket
+  ) => void;
+  onTicketRemove: (
+    ticketIdx: number,
+    ticket: Ticket
+  ) => void;
 }
 
 const TABLE_COLUMNS = ["Status", "Author", "Message", "Creation", "Status Update", ""]
 
-const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }: TicketTableProps) => {
+const TicketTable = ({
+   totalNumRows, currentRows, page, pageSize, onPageChange, onTicketClose, onTicketRemove
+}: TicketTableProps) => {
   const [tableRows, setTableRows] = useState([]);
 
   useEffect(() => {
@@ -51,7 +63,7 @@ const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }
 
           <TableBody>
             {tableRows ? (
-              tableRows.map((row) => (
+              tableRows.map((row, idx) => (
                 <TableRow key={row["id"]}>
                   <TableCell component="th" scope="row">
                     <TicketStatusChip status={row["status"]} />
@@ -93,14 +105,20 @@ const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }
                     </Tooltip>
 
                     <Tooltip title="Close Ticket" arrow>
-                      <IconButton color="success">
-                        <CheckIcon />
+                      <IconButton
+                        color="success"
+                        disabled={row["status"] !== "open"}
+                        sx={{
+                          opacity: row["status"] === "open" ? 1 : 0.3
+                        }}
+                      >
+                        <CheckIcon onClick={(): void => { onTicketClose(idx, row) }} />
                       </IconButton>
                     </Tooltip>
 
                     <Tooltip title="Delete Ticket" arrow>
                       <IconButton color="warning">
-                        <DeleteIcon />
+                        <DeleteIcon onClick={(): void => { onTicketRemove(idx, row) }} />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
