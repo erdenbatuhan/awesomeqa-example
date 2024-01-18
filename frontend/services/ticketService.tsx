@@ -4,6 +4,11 @@ import Constants from "./constants";
 import type Ticket from "./types/ticket.type";
 import type Message from "./types/message.type";
 
+interface TicketsResponse {
+  ticket_count: number;
+  tickets: Ticket[];
+}
+
 class TicketService {
 
   private static readonly API_URL: string = `${Constants.BASE_URL}/tickets`;
@@ -11,21 +16,26 @@ class TicketService {
   static getTickets(
     page: number,
     pageSize: number,
-    author?: string,
-    msgContent?: string,
-    status?: string[],
-    timestampStart?: string,
-    timestampEnd?: string
-  ): Promise<AxiosResponse<Ticket[]>> {
-    return axios.get<Ticket[]>(`${TicketService.API_URL}`, {
+    filter: {
+      author?: string;
+      msgContent?: string;
+      statusList?: string[];
+      timestampStart?: string;
+      timestampEnd?: string;
+    } = {}
+  ): Promise<AxiosResponse<TicketsResponse>> {
+    return axios.get<TicketsResponse>(`${TicketService.API_URL}`, {
       params: {
         page,
         page_size: pageSize,
-        author,
-        msg_content: msgContent,
-        status,
-        timestamp_start: timestampStart,
-        timestamp_end: timestampEnd
+        author: filter.author,
+        msg_content: filter.msgContent,
+        status: filter.statusList,
+        timestamp_start: filter.timestampStart,
+        timestamp_end: filter.timestampEnd
+      },
+      paramsSerializer: {
+        indexes: null
       }
     });
   }

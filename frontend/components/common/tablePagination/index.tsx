@@ -26,13 +26,13 @@ const TablePagination = ({ colSpan, count, page, pageSize, onChange }: TablePagi
   const handleChangePage = (
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
-  ) => {
+  ): void => {
     onChange(newPage, pageSize);
   };
 
   const handleChangeRowsPerPage = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  ): void => {
     onChange(0, parseInt(event.target.value, 10));
   };
 

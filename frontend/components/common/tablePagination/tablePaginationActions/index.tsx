@@ -21,19 +21,19 @@ const TablePaginationActions = ({ count, page, rowsPerPage, onPageChange }: Tabl
 
   const handleFirstPageButtonClick = (
     event: MouseEvent<HTMLButtonElement>,
-  ) => {
+  ): void => {
     onPageChange(event, 0);
   };
 
-  const handleBackButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleBackButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
     onPageChange(event, page - 1);
   };
 
-  const handleNextButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleNextButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
     onPageChange(event, page + 1);
   };
 
-  const handleLastPageButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleLastPageButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 

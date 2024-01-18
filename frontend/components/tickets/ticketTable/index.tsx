@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import { MoreHoriz as InfoIcon, Check as CheckIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
+import TicketStatusChip from "../ticketStatusChip";
 import TablePagination from "../../common/tablePagination";
 
 interface TicketTableProps {
@@ -19,11 +20,6 @@ interface TicketTableProps {
 }
 
 const TABLE_COLUMNS = ["Status", "Author", "Message", "Creation", "Status Update", ""]
-const STATUS_CHIP_COLOR = {
-  "open": "primary",
-  "closed": "success",
-  "removed": "error"
-};
 
 const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }: TicketTableProps) => {
   const [tableRows, setTableRows] = useState([]);
@@ -39,7 +35,7 @@ const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }
     })));
   }, [currentRows]);
 
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleString();
+  const formatDate = (dateString: string): string => new Date(dateString).toLocaleString();
 
   return (
     <>
@@ -58,14 +54,7 @@ const TicketTable = ({ totalNumRows, currentRows, page, pageSize, onPageChange }
               tableRows.map((row) => (
                 <TableRow key={row["id"]}>
                   <TableCell component="th" scope="row">
-                    <Chip
-                      label={row["status"]}
-                      color={STATUS_CHIP_COLOR[row["status"]]}
-                      sx={{
-                        "minWidth": "80px",
-                        "textAlign": "center",
-                      }}
-                    />
+                    <TicketStatusChip status={row["status"]} />
                   </TableCell>
 
                   <TableCell>

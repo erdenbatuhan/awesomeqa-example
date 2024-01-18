@@ -5,13 +5,22 @@ import {
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import localeEnGB from "dayjs/locale/en-gb";
+
+export interface Filter {
+  status: string;
+  author: string;
+  message: string;
+  startDate: Date;
+  endDate: Date;
+}
 
 type TicketFilterPropsType = {
-  onApply: (filter: Object) => void;
+  onApply: (filter: Filter) => void;
 }
 
 const STATUS_VALUES = ["open", "closed", /* "removed" */];
-const EMPTY_FILTER = {
+const EMPTY_FILTER: Filter = {
   status: "",
   author: "",
   message: "",
@@ -20,10 +29,14 @@ const EMPTY_FILTER = {
 };
 
 const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
-  const [filter, setFilters] = useState(EMPTY_FILTER);
+  const [filter, setFilter] = useState(EMPTY_FILTER);
 
-  const resetFilters = () => setFilters(EMPTY_FILTER);
-  const applyFilters = () => onApply(filter);
+  const resetFilters = (): void => {
+    setFilter(EMPTY_FILTER);
+    onApply(EMPTY_FILTER);
+  };
+
+  const applyFilters = (): void => onApply(filter);
 
   return (
     <>
@@ -35,7 +48,7 @@ const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
             select
             value={filter.status}
             onChange={(e) =>
-              setFilters({ ...filter, status: e.target.value as string })
+              setFilter({ ...filter, status: e.target.value as string })
             }
             sx={{ width: 120 }}
           >
@@ -53,7 +66,7 @@ const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
             label="Author"
             value={filter.author}
             onChange={(e) =>
-              setFilters({ ...filter, author: e.target.value })
+              setFilter({ ...filter, author: e.target.value })
             }
           />
         </Grid>
@@ -64,14 +77,14 @@ const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
             label="Message"
             value={filter.message}
             onChange={(e) =>
-              setFilters({ ...filter, message: e.target.value })
+              setFilter({ ...filter, message: e.target.value })
             }
           />
         </Grid>
 
         {/* Start Date */}
         <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
             <DatePicker
               label="Start Date"
               slotProps={{
@@ -79,7 +92,7 @@ const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
               }}
               value={filter.startDate}
               onChange={(newValue) =>
-                setFilters({ ...filter, startDate: newValue })
+                setFilter({ ...filter, startDate: newValue })
               }
               sx={{ width: 180 }}
             />
@@ -88,7 +101,7 @@ const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
 
         {/* End Date */}
         <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
             <DatePicker
               label="End Date"
               slotProps={{
@@ -96,12 +109,15 @@ const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
               }}
               value={filter.endDate}
               onChange={(newValue) =>
-                setFilters({ ...filter, endDate: newValue })
+                setFilter({ ...filter, endDate: newValue })
               }
               sx={{ width: 180 }}
             />
           </LocalizationProvider>
         </Grid>
+
+        {/* Need this to for "en-gb" locale to work! */}
+        <p style={{ display: "none" }}>{localeEnGB.formats.LLLL}</p>
 
         {/* Action Buttons */}
         <Grid item>
