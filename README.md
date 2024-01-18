@@ -1,4 +1,4 @@
-# Awesome ticket challenge
+# Awesome Ticket Challenge
 
 ### Backend
 
@@ -9,7 +9,8 @@ Steps to setup the backend environment:
 3. Run `make setup`
 4. Run `make run`
 5. Try it by calling [http://localhost:5001/tickets](http://localhost:5001/tickets)
-6. **For detailed information on the endpoints, visit [http://localhost:5001/docs](http://localhost:5001/docs)**
+6. **Run `make test` to execute the tests**
+7. **For detailed information on the endpoints, visit [http://localhost:5001/docs](http://localhost:5001/docs)**
 
 ### Frontend
 
