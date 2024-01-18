@@ -1,5 +1,4 @@
 import json
-
 from typing import TypeVar, Union
 from pydantic import TypeAdapter
 

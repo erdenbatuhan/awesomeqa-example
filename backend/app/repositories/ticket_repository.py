@@ -4,10 +4,8 @@ from collections import Counter
 from ..models.ticket import Ticket
 from ..models.message import Message
 from ..models.enums.status import Status
-
 from ..utils.data_utils import DataUtils
 from ..utils.list_utils import ListUtils
-
 from ..exceptions.not_found_exception import NotFoundException
 
 
