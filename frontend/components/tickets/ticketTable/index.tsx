@@ -19,6 +19,10 @@ interface TicketTableProps {
     page: number,
     pageSize: number
   ) => void;
+  onTicketInfoRequest: (
+    ticketIdx: number,
+    ticket: Ticket
+  ) => void;
   onTicketClose: (
     ticketIdx: number,
     ticket: Ticket
@@ -32,7 +36,8 @@ interface TicketTableProps {
 const TABLE_COLUMNS = ["Status", "Author", "Message", "Creation", "Status Update", ""]
 
 const TicketTable = ({
-   totalNumRows, currentRows, page, pageSize, onPageChange, onTicketClose, onTicketRemove
+   totalNumRows, currentRows, page, pageSize, onPageChange,
+   onTicketInfoRequest, onTicketClose, onTicketRemove
 }: TicketTableProps) => {
   const [tableRows, setTableRows] = useState([]);
 
@@ -100,7 +105,10 @@ const TicketTable = ({
                   <TableCell>
                     <Tooltip title="See Ticket Details" arrow>
                       <span>
-                        <IconButton color="info">
+                        <IconButton
+                          color="info"
+                          onClick={(): void => { onTicketInfoRequest(idx, row) }}
+                        >
                           <InfoIcon/>
                         </IconButton>
                       </span>
@@ -125,9 +133,7 @@ const TicketTable = ({
                       <span>
                         <IconButton
                           color="warning"
-                          onClick={(): void => {
-                            onTicketRemove(idx, row)
-                          }}
+                          onClick={(): void => { onTicketRemove(idx, row) }}
                         >
                           <DeleteIcon/>
                         </IconButton>

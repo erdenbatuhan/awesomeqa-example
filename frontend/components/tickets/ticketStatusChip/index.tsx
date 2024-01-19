@@ -6,6 +6,7 @@ import styles from "../../common/actionButton/actionButton.module.css";
 interface TicketStatusChipPropsType {
   status: string;
   count?: number;
+  noBorder?: boolean;
 }
 
 const STATUS_CHIP_COLOR = {
@@ -14,7 +15,7 @@ const STATUS_CHIP_COLOR = {
   "removed": "error"
 };
 
-const TicketStatusChip = ({ status, count }: TicketStatusChipPropsType) => {
+const TicketStatusChip = ({ status, count, noBorder = false }: TicketStatusChipPropsType) => {
   const [chipLabel, setChipLabel] = useState("");
 
   useEffect(() => {
@@ -28,7 +29,8 @@ const TicketStatusChip = ({ status, count }: TicketStatusChipPropsType) => {
         color={STATUS_CHIP_COLOR[status]}
         sx={{
           "minWidth": "80px",
-          "textAlign": "center"
+          "textAlign": "center",
+          "borderRadius": noBorder ? 0 : "16px"
         }}
       />
     </>

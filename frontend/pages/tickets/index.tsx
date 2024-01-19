@@ -10,6 +10,7 @@ import type { Filter } from "../../components/tickets/ticketFilter";
 import TicketTable from "../../components/tickets/ticketTable";
 import ConfirmationDialog from "../../components/common/confirmationDialog";
 import MessageCard from "../../components/tickets/messageCard";
+import TicketDetailsDialog from "../../components/tickets/ticketDetailsDialog";
 
 import TicketService from "../../services/ticketService";
 import type Ticket from "../../types/ticket.type";
@@ -29,9 +30,10 @@ const Tickets: NextPage = () => {
   const [lastSelectedTicket, setLastSelectedTicket] = useState(null);
   const [lastSelectedAction, setLastSelectedAction] = useState(null);
   const [confirmationDialogShown, setConfirmationDialogShown] = useState(false);
+  const [ticketDetailsDialogShown, setTicketDetailsDialogShown] = useState(false);
 
   useEffect(() => {
-    setTotalNumTickets(null);
+    setTotalNumTickets(null); // Set to null to visualize loading
 
     TicketService.getTicketCounts()
       .then((ticketCountsResponse) => {
@@ -121,7 +123,7 @@ const Tickets: NextPage = () => {
   const takeAction = (): void => {
     if (lastSelectedAction === "CLOSE") {
       closeTicket(lastSelectedTicket);
-    } else {
+    } else if (lastSelectedAction === "DELETE") {
       removeTicket(lastSelectedTicket);
     }
   }
@@ -131,14 +133,18 @@ const Tickets: NextPage = () => {
       <Box sx={{flexGrow: 1, mt: 5, mb: 5}}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Box sx={{ mb: 2 }}>
-              <TicketFilter onApply={handleFilterChange} />
+            <Box sx={{ display: "flex", justifyContent: "center", gap: "1em", mb: 2 }}>
+              {['open', 'closed', 'removed'].map(status => (
+                <TicketStatusChip
+                  key={status}
+                  status={status}
+                  count={statusTicketCounts[status] || 0}
+                />
+              ))}
             </Box>
 
-            <Box sx={{ display: "flex", justifyContent: "center", gap: "1em" }}>
-              {['open', 'closed', 'removed'].map(status => (
-                <TicketStatusChip key={status} status={status} count={statusTicketCounts[status] || 0} />
-              ))}
+            <Box sx={{ mb: 2 }}>
+              <TicketFilter onApply={handleFilterChange} />
             </Box>
 
             <Box>
@@ -150,6 +156,11 @@ const Tickets: NextPage = () => {
                 onPageChange={(page, pageSize) => {
                   setPage(page);
                   setPageSize(pageSize);
+                }}
+                onTicketInfoRequest={(ticketIdx: number, ticket: Ticket): void => {
+                  setLastSelectedTicket(ticket);
+                  setLastSelectedAction("INFO");
+                  setTicketDetailsDialogShown(true);
                 }}
                 onTicketClose={(ticketIdx: number, ticket: Ticket): void => {
                   setLastSelectedTicket(ticket);
@@ -167,12 +178,22 @@ const Tickets: NextPage = () => {
         </Grid>
       </Box>
 
+      <TicketDetailsDialog
+        dialogShown={ticketDetailsDialogShown}
+        ticket={lastSelectedTicket}
+        onClose={() => setTicketDetailsDialogShown(false)}
+      />
+
       <ConfirmationDialog
         dialogShown={confirmationDialogShown}
         action={lastSelectedAction}
         itemName="ticket"
         dialogContent={(
-          <MessageCard message={lastSelectedTicket && lastSelectedTicket.msg} />
+          <MessageCard
+            ticketStatus={lastSelectedTicket && lastSelectedTicket.status}
+            message={lastSelectedTicket && lastSelectedTicket.msg}
+            borderColored
+          />
         )}
         onConfirm={takeAction}
         onClose={() => setConfirmationDialogShown(false)}

@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+  Button, Dialog, DialogActions, DialogContent, DialogTitle
 } from "@mui/material";
 
 interface ConfirmationDialogPropsType {
