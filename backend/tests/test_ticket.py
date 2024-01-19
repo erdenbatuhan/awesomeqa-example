@@ -25,7 +25,6 @@ def test_get_tickets_with_pagination():
     """
     Confirm that the response data matches the expected page size and starts at the given page
     """
-
     for page, page_size in [(DEFAULT_PAGE, DEFAULT_PAGE_SIZE), (12, 8)]:
         first_expected_idx = page * page_size
         first_expected_ticket = list(mock_data["tickets"].values())[first_expected_idx]
@@ -43,7 +42,6 @@ def test_get_tickets_with_invalid_pagination():
     """
     Confirm that invalid pagination parameters result in a 422 Unprocessable Entity response
     """
-
     response = client.get("/api/v1/tickets/", params={"page": -5, "page_size": -10})
     response_data = response.json()
 
@@ -57,7 +55,6 @@ def test_get_tickets_with_author_filter():
     """
     Confirm that only the given author's tickets are returned
     """
-
     author_name = "samuyal01"
     num_tickets_with_given_author = sum([
         mock_data["messages"][message_id].author.name == author_name
@@ -80,7 +77,6 @@ def test_get_tickets_with_msg_content_filter():
     """
     Confirm that the messages of all returned tickets contain the given message content
     """
-
     message_content = "NFT"
     num_messages_with_given_content = sum([
         message_content.lower() in mock_data["messages"][message_id].content.lower()
@@ -103,7 +99,6 @@ def test_get_tickets_with_status_filter():
     """
     Confirm that all returned tickets have the given status
     """
-
     status = Status.OPEN
     num_tickets_with_given_status = sum([
         ticket.status == status
@@ -126,7 +121,6 @@ def test_get_tickets_with_timestamp_filter():
     """
     Confirm that all returned tickets have timestamps within the given range
     """
-
     timestamp_start = datetime.strptime("2023-10-30T09:00:00", "%Y-%m-%dT%H:%M:%S")
     timestamp_end = datetime.strptime("2023-11-02T12:00:00", "%Y-%m-%dT%H:%M:%S")
     num_tickets_with_timestamps_within_given_range = sum([
@@ -153,7 +147,6 @@ def test_get_ticket_counts():
     """
     Confirm that the response data contains ticket counts for each status
     """
-
     ticket_counts = Counter(ticket.status for ticket in mock_data["tickets"].values())
 
     response = client.get("/api/v1/tickets/counts")
@@ -168,7 +161,6 @@ def test_get_ticket():
     """
     Confirm that the response data contains the ticket with the given ID
     """
-
     ticket_id = list(mock_data["tickets"].keys())[0]
 
     response = client.get(f"/api/v1/tickets/{ticket_id}")
@@ -183,7 +175,6 @@ def test_get_ticket_not_found():
     """
     Confirm that the response data indicates the ticket with the invalid given ID is not found
     """
-
     ticket_id = "INVALID_TICKET_ID"
     ticket_not_found_exception = NotFoundException("ticket", ticket_id)
 
@@ -198,7 +189,6 @@ def test_get_ticket_context_messages():
     """
     Confirm that the response data contains the context messages for the ticket with the given ID
     """
-
     ticket = list(mock_data["tickets"].values())[0]
 
     response = client.get(f"/api/v1/tickets/{ticket.id}/messages")
@@ -213,7 +203,6 @@ def test_close_ticket():
     """
     Confirm that the response data contains the closed ticket with the given ID
     """
-
     ticket_id = list(mock_data["tickets"].keys())[0]
 
     response = client.put(f"/api/v1/tickets/{ticket_id}")
@@ -228,7 +217,6 @@ def test_remove_ticket():
     """
     Confirm that the response data contains the removed ticket with the given ID
     """
-
     ticket_id = list(mock_data["tickets"].keys())[0]
 
     response = client.delete(f"/api/v1/tickets/{ticket_id}")

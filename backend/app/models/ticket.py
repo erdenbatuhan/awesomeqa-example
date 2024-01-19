@@ -17,6 +17,15 @@ class Ticket(BaseObject):
     context_messages: list[str]
 
     def filter(self, **kwargs) -> bool:
+        """
+        Filters the ticket based on the provided keyword arguments.
+
+        Parameters:
+        - **kwargs: Filtering criteria for author, message content, status, timestamp range.
+
+        Returns:
+        bool: True if the ticket passes all filters, False otherwise.
+        """
         return all([
             kwargs.get('author') is None or (
                 self.msg is not None and kwargs.get('author').lower() in self.msg.author.name.lower()

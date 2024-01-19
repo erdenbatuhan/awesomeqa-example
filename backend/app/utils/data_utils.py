@@ -15,6 +15,17 @@ class DataUtils:
         data_types: list[type[T]],
         data_keys: list[str]
     ) -> dict[str, dict[str, Union[T]]]:
+        """
+        Reads data from a JSON file, validates it, and returns a dictionary of validated data.
+
+        Parameters:
+        - filepath (str): The path to the JSON file.
+        - data_types (List[type[T]]): List of data types to validate.
+        - data_keys (List[str]): List of keys corresponding to different data types.
+
+        Returns:
+        Dict[str, Dict[str, Union[T]]]: A dictionary containing validated data for each data type.
+        """
         with open(filepath) as json_file:
             json_data = json.load(json_file)
 
