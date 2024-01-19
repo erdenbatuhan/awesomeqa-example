@@ -3,7 +3,7 @@ import { TablePagination as MuiTablePagination } from "@mui/material";
 
 import TablePaginationActions from "./tablePaginationActions";
 
-interface TablePaginationProps {
+type TablePaginationProps = {
   colSpan: number;
   count: number;
   page: number;
@@ -14,10 +14,12 @@ interface TablePaginationProps {
   ) => void;
 }
 
-const ROWS_PER_PAGE_OPTIONS = [5, 10, 20, 25, 50]
+type ROWS_PER_PAGE_OPTIONS_TYPE = (number | { label: string; value: number })[];
+
+const ROWS_PER_PAGE_OPTIONS: ROWS_PER_PAGE_OPTIONS_TYPE = [5, 10, 20, 25, 50]
 
 const TablePagination = ({ colSpan, count, page, pageSize, onChange }: TablePaginationProps) => {
-  const [rowsPerPageOptions, setRowsPerPageOptions] = useState([])
+  const [rowsPerPageOptions, setRowsPerPageOptions] = useState<ROWS_PER_PAGE_OPTIONS_TYPE>([])
 
   useEffect(() => {
     setRowsPerPageOptions([...ROWS_PER_PAGE_OPTIONS, ...[{label: "All", value: count || 0}]]);

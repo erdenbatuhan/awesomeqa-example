@@ -10,7 +10,7 @@ import TablePagination from "../../common/tablePagination";
 
 import type Ticket from "../../../types/ticket.type";
 
-interface TicketTableProps {
+type TicketTableProps = {
   totalNumRows: number;
   currentRows: Ticket[];
   page: number;
@@ -39,7 +39,7 @@ const TicketTable = ({
    totalNumRows, currentRows, page, pageSize, onPageChange,
    onTicketInfoRequest, onTicketClose, onTicketRemove
 }: TicketTableProps) => {
-  const [tableRows, setTableRows] = useState([]);
+  const [tableRows, setTableRows] = useState<Ticket[]>([]);
 
   useEffect(() => {
     // Enhance the rows readability (e.g., format dates for better readability)
@@ -107,7 +107,7 @@ const TicketTable = ({
                       <span>
                         <IconButton
                           color="info"
-                          onClick={(): void => { onTicketInfoRequest(idx, row) }}
+                          onClick={() => { onTicketInfoRequest(idx, row) }}
                         >
                           <InfoIcon/>
                         </IconButton>
@@ -122,7 +122,7 @@ const TicketTable = ({
                           sx={{
                             opacity: row["status"] === "open" ? 1 : 0.3
                           }}
-                          onClick={(): void => { onTicketClose(idx, row) }}
+                          onClick={() => { onTicketClose(idx, row) }}
                         >
                           <CheckIcon />
                         </IconButton>
@@ -133,7 +133,7 @@ const TicketTable = ({
                       <span>
                         <IconButton
                           color="warning"
-                          onClick={(): void => { onTicketRemove(idx, row) }}
+                          onClick={() => { onTicketRemove(idx, row) }}
                         >
                           <DeleteIcon/>
                         </IconButton>

@@ -3,12 +3,15 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, LinearProgress
 } from "@mui/material";
 
+import { eventBus } from "../../../common/eventBus";
+
 import MessageCard from "../messageCard";
 
 import TicketService from "../../../services/ticketService";
 import type Ticket from "../../../types/ticket.type";
+import type Message from "../../../types/message.type";
 
-interface TicketDetailsDialogPropsType {
+type TicketDetailsDialogPropsType = {
   dialogShown: boolean;
   ticket: Ticket;
   onClose: () => void;
@@ -17,7 +20,7 @@ interface TicketDetailsDialogPropsType {
 const TicketDetailsDialog = ({
   dialogShown, ticket, onClose
 }: TicketDetailsDialogPropsType) => {
-  const [ticketMessages, setTicketMessages] = useState([]);
+  const [ticketMessages, setTicketMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     if (!dialogShown || !ticket) return;
@@ -29,7 +32,7 @@ const TicketDetailsDialog = ({
         setTicketMessages(ticketCountsResponse.data);
       })
       .catch((err) => {
-        console.error(`An error occurred while fetching the ticket's context messages. (Error: ${err.message})`);
+        eventBus.emit("showAlert", "error", `An error occurred while fetching the ticket's context messages. (Error: ${err.message})`);
         setTicketMessages([]);
       });
   }, [dialogShown, ticket]);

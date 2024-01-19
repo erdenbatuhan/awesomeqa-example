@@ -4,7 +4,7 @@ import Constants from "./constants";
 import type Ticket from "../types/ticket.type";
 import type Message from "../types/message.type";
 
-interface TicketsResponse {
+type TicketsResponse = {
   ticket_count: number;
   tickets: Ticket[];
 }

@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Chip } from "@mui/material";
 
-import styles from "../../common/actionButton/actionButton.module.css";
-
-interface TicketStatusChipPropsType {
+type TicketStatusChipPropsType = {
   status: string;
   count?: number;
   noBorder?: boolean;
@@ -16,7 +14,7 @@ const STATUS_CHIP_COLOR = {
 };
 
 const TicketStatusChip = ({ status, count, noBorder = false }: TicketStatusChipPropsType) => {
-  const [chipLabel, setChipLabel] = useState("");
+  const [chipLabel, setChipLabel] = useState<string>("");
 
   useEffect(() => {
     setChipLabel(count === undefined ? status : `${status}: ${count}`);

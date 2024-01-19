@@ -4,6 +4,8 @@ import {
   Box, Grid
 } from "@mui/material";
 
+import { eventBus } from "../../common/eventBus";
+
 import TicketStatusChip from "../../components/tickets/ticketStatusChip";
 import TicketFilter from "../../components/tickets/ticketFilter";
 import type { Filter } from "../../components/tickets/ticketFilter";
@@ -18,19 +20,25 @@ import type Ticket from "../../types/ticket.type";
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 5;
 
+type StatusTicketCounts = {
+  [key: string]: number;
+}
+
+type LAST_SELECTION_ACTION = "INFO" | "CLOSE" | "DELETE";
+
 const Tickets: NextPage = () => {
-  const [statusTicketCounts, setStatusTicketCounts] = useState({});
-  const [totalNumTickets, setTotalNumTickets] = useState(0);
-  const [tickets, setTickets] = useState([]);
+  const [statusTicketCounts, setStatusTicketCounts] = useState<StatusTicketCounts>({});
+  const [totalNumTickets, setTotalNumTickets] = useState<number>(0);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
 
-  const [page, setPage] = useState(DEFAULT_PAGE);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [filterApplied, setFilterApplied] = useState({});
+  const [page, setPage] = useState<number>(DEFAULT_PAGE);
+  const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
+  const [filterApplied, setFilterApplied] = useState<Filter>({});
 
-  const [lastSelectedTicket, setLastSelectedTicket] = useState(null);
-  const [lastSelectedAction, setLastSelectedAction] = useState(null);
-  const [confirmationDialogShown, setConfirmationDialogShown] = useState(false);
-  const [ticketDetailsDialogShown, setTicketDetailsDialogShown] = useState(false);
+  const [lastSelectedTicket, setLastSelectedTicket] = useState<Ticket>(null);
+  const [lastSelectedAction, setLastSelectedAction] = useState<LAST_SELECTION_ACTION>(null);
+  const [confirmationDialogShown, setConfirmationDialogShown] = useState<boolean>(false);
+  const [ticketDetailsDialogShown, setTicketDetailsDialogShown] = useState<boolean>(false);
 
   useEffect(() => {
     setTotalNumTickets(null); // Set to null to visualize loading
@@ -40,7 +48,7 @@ const Tickets: NextPage = () => {
         setStatusTicketCounts(ticketCountsResponse.data);
       })
       .catch((err) => {
-        console.error(`An error occurred while fetching the ticket counts. (Error: ${err.message})`);
+        eventBus.emit("showAlert", "error", `An error occurred while fetching the ticket counts. (Error: ${err.message})`);
         setTotalNumTickets(0);
       });
   }, []);
@@ -60,7 +68,7 @@ const Tickets: NextPage = () => {
         setTickets(ticketsResponse.data.tickets);
       })
       .catch((err) => {
-        console.error(`An error occurred while fetching the tickets. (Error: ${err.message})`);
+        eventBus.emit("showAlert", "error", `An error occurred while fetching the tickets. (Error: ${err.message})`);
         setTickets([]);
       });
   }
@@ -100,9 +108,11 @@ const Tickets: NextPage = () => {
 
         // Update status ticket counts
         setStatusCountsAfterUpdate(ticket.status, "closed");
+
+        eventBus.emit("showAlert", "success", `The ticket has successfully been closed. (ID=${ticket.id})`);
       })
       .catch((err) => {
-        console.error(`An error occurred while closing the ticket. (Error: ${err.message})`);
+        eventBus.emit("showAlert", "error", `An error occurred while closing the ticket. (Error: ${err.message})`);
       });
   }
 
@@ -114,9 +124,11 @@ const Tickets: NextPage = () => {
 
         // Update status ticket counts
         setStatusCountsAfterUpdate(ticket.status, "removed");
+
+        eventBus.emit("showAlert", "success", `The ticket has successfully been removed. (ID=${ticket.id})`);
       })
       .catch((err) => {
-        console.error(`An error occurred while removing the ticket. (Error: ${err.message})`);
+        eventBus.emit("showAlert", "error", `An error occurred while removing the ticket. (Error: ${err.message})`);
       });
   }
 

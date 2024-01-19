@@ -3,7 +3,7 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle
 } from "@mui/material";
 
-interface ConfirmationDialogPropsType {
+type ConfirmationDialogPropsType = {
   dialogShown: boolean;
   action: string;
   itemName: string;

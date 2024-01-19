@@ -6,7 +6,7 @@ import TicketStatusChip from "../ticketStatusChip";
 
 import type Message from "../../../types/message.type";
 
-interface MessageCardPropsType {
+type MessageCardPropsType = {
   ticketStatus?: string;
   message: Message;
   borderColored?: boolean;

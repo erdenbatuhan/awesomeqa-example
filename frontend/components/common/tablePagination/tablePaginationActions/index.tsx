@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 
-interface TablePaginationActionsProps {
+type TablePaginationActionsProps = {
   count: number;
   page: number;
   rowsPerPage: number;

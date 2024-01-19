@@ -7,12 +7,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import localeEnGB from "dayjs/locale/en-gb";
 
-export interface Filter {
-  status: string;
-  author: string;
-  message: string;
-  startDate: Date;
-  endDate: Date;
+import { eventBus } from "../../../common/eventBus";
+
+export type Filter = {
+  status?: string;
+  author?: string;
+  message?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 type TicketFilterPropsType = {
@@ -29,14 +31,19 @@ const EMPTY_FILTER: Filter = {
 };
 
 const TicketFilter = ({ onApply }: TicketFilterPropsType) => {
-  const [filter, setFilter] = useState(EMPTY_FILTER);
+  const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
 
   const resetFilters = (): void => {
     setFilter(EMPTY_FILTER);
     onApply(EMPTY_FILTER);
+
+    eventBus.emit("showAlert", "info", "The filter selection has been reset.");
   };
 
-  const applyFilters = (): void => onApply(filter);
+  const applyFilters = (): void => {
+    onApply(filter);
+    eventBus.emit("showAlert", "info", "The new filter has been applied.");
+  };
 
   return (
     <>
