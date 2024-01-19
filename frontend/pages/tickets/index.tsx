@@ -94,10 +94,11 @@ const Tickets: NextPage = () => {
   }
 
   const setStatusCountsAfterUpdate = (oldStatus: string, newStatus: string): void => {
-    statusTicketCounts[oldStatus] -= 1;
-    statusTicketCounts[newStatus] += 1;
-
-    setStatusTicketCounts(statusTicketCounts);
+    setStatusTicketCounts({
+      ...statusTicketCounts,
+      [oldStatus]: statusTicketCounts[oldStatus] - 1,
+      [newStatus]: statusTicketCounts[newStatus] + 1
+    });
   }
 
   const closeTicket = (ticket: Ticket): void => {
