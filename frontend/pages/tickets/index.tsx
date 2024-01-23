@@ -97,7 +97,7 @@ const Tickets: NextPage = () => {
     setStatusTicketCounts({
       ...statusTicketCounts,
       [oldStatus]: statusTicketCounts[oldStatus] - 1,
-      [newStatus]: statusTicketCounts[newStatus] + 1
+      [newStatus]: (statusTicketCounts[newStatus] ?? 0) + 1
     });
   }
 
